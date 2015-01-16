@@ -43,33 +43,33 @@ public class EBDCBuilder {
 		
 		while(true){
 			k--;
-			double maxE=-Double.MAX_VALUE;
-			int maxIndex=-1;
+			double minE=Double.MAX_VALUE;
+			int minIndex=-1;
 			for(int i=0;i<list.size()-1;i++){
 				double pi=((double)map.get(list.get(i)))/total;
 				double pj=((double)map.get(list.get(i+1)))/total;
-				double res=pi*Math.log(pi)+pj*Math.log(pj)-(pi+pj)*Math.log(pi+pj);
-				if(res>maxE){
-					maxE=res;
-					maxIndex=i;
+				double res=(-pi*Math.log(pi)-pj*Math.log(pj))+(pi+pj)*Math.log(pi+pj);
+				if(res<minE){
+					minE=res;
+					minIndex=i;
 				}
 			}
-			if(maxIndex==-1)
+			if(minIndex==-1)
 				break;
-			deltah+=maxE;
+			deltah+=minE;
 			System.out.println(deltah);
-			double tmph=Math.abs(-(maxk-2)*(hmax+deltah)+hmax*(k-1));
+			double tmph=Math.abs(-(maxk-2)*(hmax-deltah)+hmax*(k-1));
 			
 			System.out.println("h "+tmph);
-			System.out.println("y "+(hmax+deltah));
+			System.out.println("y "+(hmax-deltah));
 			if(h<=tmph){
 				h=tmph;
 				location=unionList.size();
 			}
-			map.put(list.get(maxIndex), map.get(list.get(maxIndex))+map.get(list.get(maxIndex+1)));
-			map.remove(list.get(maxIndex+1));
-			list.remove(maxIndex+1);
-			unionList.add(maxIndex+1);
+			map.put(list.get(minIndex), map.get(list.get(minIndex))+map.get(list.get(minIndex+1)));
+			map.remove(list.get(minIndex+1));
+			list.remove(minIndex+1);
+			unionList.add(minIndex+1);
 			if(list.size()<=2)
 				break;
 		}
